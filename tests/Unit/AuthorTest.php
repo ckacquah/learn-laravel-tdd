@@ -6,7 +6,6 @@ use App\Models\Author;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-
 class AuthorTest extends TestCase
 {
     use RefreshDatabase;
@@ -17,11 +16,14 @@ class AuthorTest extends TestCase
      */
     public function test_that_only_name_is_required()
     {
-        $this->withoutDeprecationHandling();
-        Author::firstOrCreate([
-            'name' => 'Victor Valdes'
-        ]);
-
+        Author::firstOrCreate($this->data());
         $this->assertCount(1, Author::all());
+    }
+
+    private function data()
+    {
+        return [
+            'name' => 'Victor Valdes',
+        ];
     }
 }

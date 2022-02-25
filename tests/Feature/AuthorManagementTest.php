@@ -11,18 +11,10 @@ use Tests\TestCase;
 class AuthorManagementTest extends TestCase
 {
     use RefreshDatabase;
-    /**
-     * Test that a new author can created from post request
-     *
-     * @return void
-     */
+
     public function test_an_author_can_be_created()
     {
-        $this->withoutExceptionHandling();
-        $response = $this->post('/authors', [
-            'name' => 'Gregory Jordan',
-            'date_of_birth' => '05/02/1992',
-        ]);
+        $response = $this->post('/authors', $this->data());
 
         $this->assertCount(1, Author::all());
 
@@ -34,15 +26,8 @@ class AuthorManagementTest extends TestCase
         $response->assertRedirect($author->path());
     }
 
-
-    /**
-     * Test that a new author can created from post request
-     *
-     * @return void
-     */
     public function test_a_new_author_is_automatically_created()
     {
-        $this->withoutExceptionHandling();
         $response = $this->post('/books', [
             'author_id' => 'Gregory Jordan',
             'title' => 'Cool book title',
@@ -52,5 +37,20 @@ class AuthorManagementTest extends TestCase
         $book = Book::first();
         $this->assertEquals($book->author_id, $author->id);
         $this->assertCount(1, Author::all());
+    }
+
+    public function test_that_the_name_feild_is_required()
+    {
+        $response = $this->post('/authors', array_merge($this->data(),
+            ['name' => '']));
+        $response->assertSessionHasErrors('name');
+    }
+
+    private function data()
+    {
+        return [
+            'name' => 'Gregory Jordan',
+            'date_of_birth' => '05/02/1992',
+        ];
     }
 }
