@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Author;
 use App\Models\Book;
 use Illuminate\Http\Request;
 
@@ -11,12 +12,13 @@ class BooksController extends Controller
     {
         return request()->validate([
             'title' => "required",
-            'author' => "required",
+            'author_id' => "required",
         ]);
     }
 
     public function store()
     {
+        $data = $this->validateRequest();
         $book = Book::create($this->validateRequest());
         return redirect($book->path());
     }

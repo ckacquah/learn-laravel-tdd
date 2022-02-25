@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Author;
+use App\Models\Book;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -31,5 +32,25 @@ class AuthorManagementTest extends TestCase
 
         $author = Author::first();
         $response->assertRedirect($author->path());
+    }
+
+
+    /**
+     * Test that a new author can created from post request
+     *
+     * @return void
+     */
+    public function test_a_new_author_is_automatically_created()
+    {
+        $this->withoutExceptionHandling();
+        $response = $this->post('/books', [
+            'author_id' => 'Gregory Jordan',
+            'title' => 'Cool book title',
+        ]);
+
+        $author = Author::first();
+        $book = Book::first();
+        $this->assertEquals($book->author_id, $author->id);
+        $this->assertCount(1, Author::all());
     }
 }

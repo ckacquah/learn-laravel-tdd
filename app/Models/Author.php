@@ -12,7 +12,6 @@ class Author extends Model
     use HasFactory;
 
     protected $guarded = [
-        "id",
         "created_at",
         "updated_at",
     ];
@@ -26,9 +25,9 @@ class Author extends Model
         "date_of_birth",
     ];
 
-    public function setDateOfBirthAttribute($value)
+    public function setDateOfBirthAttribute($date_of_birth)
     {
-        $this->attributes['date_of_birth'] = Carbon::createFromFormat('d/m/Y', $value);
+        $this->attributes['date_of_birth'] = Carbon::createFromFormat('d/m/Y', $date_of_birth);
     }
 
     public function path()
